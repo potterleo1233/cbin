@@ -1,0 +1,6 @@
+xdotool key Escape
+sleep .2s
+xdotool key l
+sleep .2s
+xdotool key c
+ympv

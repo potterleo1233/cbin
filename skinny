@@ -1,0 +1,56 @@
+#!/bin/bash
+trap '' 2
+
+agenda_read() {
+	stamp=$(date +%V)
+	if [[ $? != 0 ]]; then
+		if [ ! -f ~/.config/openbox/agenda/$stamp ]; then
+			gcalcli calw 3 $(date +%m-%d-%Y) > ~/.config/openbox/agenda/$stamp
+		else
+			clear
+			echo "waiting"
+			clear
+			cat ~/.config/openbox/agenda/$stamp
+		fi
+	else
+		cat ~/.config/openbox/agenda/$stamp
+	fi
+}
+
+get_pass() {
+	data=$( dialog --insecure --passwordbox "Enter your password" 10 30 3>&1- 1>&2- 2>&3- )
+	turing=$(cat /etc/getpass.shadow)
+	during=$(echo $data | md5sum)
+	if [ "$during" = "$turing" ]; then
+		clear
+		agenda_read
+		iwconfig wlan0 | grep wlan0
+		read -p "Update Calendar?  (Y/N)" yn
+		case $yn in
+			[Yy]* ) gcalcli calw 3 $(date +%m-%d-%Y) > ~/.config/openbox/agenda/$stamp;clear;cat ~/.config/openbox/agenda/$stamp; read -p "";clear;;
+			[Nn]* ) break;;
+			* ) echo "please answer yes/no";;
+		esac
+	else
+		exec /cbin/skinny
+	fi;
+}
+
+the_skinny() {
+	while true
+	do
+	PS3='Select Window Manager'
+	OPTIONS=(O "Openbox" R "Root shell" P "Poweroff" E "Reboot" Q "Quit")
+	CHOICE=$(dialog --clear --backtitle "" --title "The Skinny" --menu  "" 12 10 5  "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		case $CHOICE in
+			O) echo 'exec openbox-session' > /home/lioff/.xinitrc;trap 2;exec xinit;;
+			R) exec sudo -i;;
+			P) exec sudo poweroff;;
+			E) exec sudo reboot;;
+			Q) exec /cbin/skinny;;
+		esac
+	done
+}
+
+get_pass
+the_skinny
