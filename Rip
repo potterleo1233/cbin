@@ -1,0 +1,11 @@
+rip=$(date +"rip"%m-%d-%Y)
+xdotool key Escape
+sleep .2s
+xdotool key f
+sleep .2s
+xdotool key c
+curl $(xclip -o) > tmpfile
+
+cat tmpfile | sed 's/" target/\n\n\n/g' | sed 's/\/\/i./\n\n\n\/\/i./g' |sed 's/" alt/" alt\n\n\n/g' | sed 's/href="/\n/g' | grep i.4cdn | sed 's/\/\/i.4cdn/http\:\/\/i.4cdn/g' | grep -v "alt" | uniq > $rip
+
+cat /home/lioff/$rip | xargs feh -F -x -z -D5

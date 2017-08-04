@@ -1,0 +1,5 @@
+#!/bin/bash
+for filename in $(pwd)/*.jpg*; do mv $filename /usr/share/quarantine; done
+for filename in $(pwd)/*.gif*; do mv $filename /usr/share/quarantine; done
+for filename in $(pwd)/*.webm*; do mv $filename /usr/share/quarantine; done
+for filename in $(pwd)/*.png*; do mv $filename /usr/share/quarantine; done
